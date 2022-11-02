@@ -556,14 +556,7 @@ public class RaidTrackerPlugin extends Plugin
 				.filter(item -> item.getId() > -1)
 				.forEach(item -> {
 					ItemComposition comp = itemManager.getItemComposition(item.getId());
-					lootList.add(new RaidTrackerItem() {
-						{
-							name = comp.getName();
-							id = comp.getId();
-							quantity = item.getQuantity();
-							price = comp.getPrice() * quantity;
-						}
-					});
+					lootList.add(new RaidTrackerItem(comp.getName(), comp.getId(), item.getQuantity(),comp.getPrice() * item.getQuantity()));
 				});
 		return lootList;
 	}

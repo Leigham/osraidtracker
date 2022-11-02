@@ -430,16 +430,17 @@ public class RaidTrackerPanel extends PluginPanel {
 
             final JLabel icon = new JLabel();
 
-
-            icon.setIcon(new ImageIcon(resizeImage(image, 0.7, AffineTransformOp.TYPE_BILINEAR)));
-            uniques.add(icon);
-
-            image.onLoaded(() ->
+            if (image != null && icon != null)
             {
                 icon.setIcon(new ImageIcon(resizeImage(image, 0.7, AffineTransformOp.TYPE_BILINEAR)));
-                icon.revalidate();
-                icon.repaint();
-            });
+                uniques.add(icon);
+                image.onLoaded(() ->
+                {
+                    icon.setIcon(new ImageIcon(resizeImage(image, 0.7, AffineTransformOp.TYPE_BILINEAR)));
+                    icon.revalidate();
+                    icon.repaint();
+                });
+            };
 
             String amountReceived;
             String amountSeen;

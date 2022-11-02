@@ -1,15 +1,15 @@
 package com.raidtracker.filereadwriter;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.raidtracker.RaidTracker;
-import com.raidtracker.RaidTrackerItem;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
@@ -66,13 +66,11 @@ public class FileReadWriter {
         }
     }
 
-/*
     public String getJSONString(RaidTracker raidTracker, Gson gson, JsonParser parser)
     {
-        System.out.println(gson.toJson(raidTracker));
         return gson.toJson(raidTracker);
-    };*/
-    public String getJSONString(RaidTracker raidTracker, Gson gson, JsonParser parser)
+    };
+    /*public String getJSONString(RaidTracker raidTracker, Gson gson, JsonParser parser)
     {
         System.out.println("gson.toJson(raidTracker)");
         System.out.println(gson.toJson(raidTracker));
@@ -87,7 +85,7 @@ public class FileReadWriter {
 
         RTJson.addProperty("lootList", lootListToString.toString());
         return RTJson.toString().replace("\\\"", "\"").replace("\"[", "[").replace("]\"", "]");
-    }
+    }*/
 
     public ArrayList<RaidTracker> readFromFile(String alternateFile, int raidType)
     {
