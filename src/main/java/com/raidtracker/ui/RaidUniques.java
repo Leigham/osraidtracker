@@ -44,7 +44,7 @@ public enum RaidUniques {
     MASORI_LEGS("Masori Chaps", ItemID.MASORI_CHAPS),
     FANG("Osmumtuns Fang", ItemID.OSMUMTENS_FANG),
     LIGHTBEARER("Lightbearer", ItemID.LIGHTBEARER),
-    GUARDIAN("Tumekens Guardian", ItemID.TUMEKENS_GUARDIAN);
+    GUARDIAN("Tumeken's guardian", ItemID.TUMEKENS_GUARDIAN);
 
 
     @Getter

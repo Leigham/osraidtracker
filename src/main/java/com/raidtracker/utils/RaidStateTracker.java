@@ -52,10 +52,10 @@ public class RaidStateTracker
                 (client.getVarbitValue(Varbits.THEATRE_OF_BLOOD) > 1)
         );
 
-        Boolean RaidChecks[] = {
+        Boolean[] RaidChecks = {
                 (client.getVarbitValue(Varbits.IN_RAID) == 1),
                 (client.getVarbitValue(Varbits.THEATRE_OF_BLOOD) > 1),
-                (w != null && !w.isHidden())
+                ((w != null && !w.isHidden()) || currentRoom != null)
         };
 
         int RaidType = -1;

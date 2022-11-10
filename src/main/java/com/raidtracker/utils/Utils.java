@@ -1,6 +1,7 @@
 package com.raidtracker.utils;
 
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
 @Slf4j
@@ -10,7 +11,19 @@ public class Utils
     {
         for (String string : l)
         {
-            if (s.toLowerCase().contains(string.toLowerCase())){
+            if (s.toLowerCase().contains(string.toLowerCase()))
+            {
+                return true;
+            }
+        }
+        return false;
+    };
+    public static boolean containsCaseInsensitive(String s, String[] f)
+    {
+        for (String string : f)
+        {
+            if (s.toLowerCase().contains(string.toLowerCase()))
+            {
                 return true;
             }
         }

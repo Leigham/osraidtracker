@@ -25,67 +25,31 @@ public class FileReadWriter {
 
     public void writeToFile(RaidTracker raidTracker)
     {
-        String dir;
         if (coxDir == null)
         {
             createFolders();
         };
-        switch (raidTracker.getInRaidType())
+        log.info("writer started");
+        ArrayList<RaidTracker> saved = readFromFile(raidTracker.getInRaidType());
+        final boolean[] newrt = {true};
+        saved.forEach(srt -> {
+            if (srt.getKillCountID() == raidTracker.getKillCountID())
+            {
+                newrt[0] = false;
+                saved.set(saved.indexOf(srt), raidTracker);
+            };
+        });
+        if (newrt[0])
         {
-            case 0 : // chambers;
-                dir = coxDir;
-                break;
-            case 1: // Tob
-                dir = tobDir;
-                break;
-            case 2 :// toa
-                dir = toaDir;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + raidTracker.getInRaidType());
-        }
-        try
-        {
-            log.info("writer started");
-
-            //use json format so serializing and deserializing is easy
-            Gson gson = new GsonBuilder().create();
-
-            JsonParser parser = new JsonParser();
-            String fileName = dir + "\\raid_tracker_data.log";
-
-            FileWriter fw = new FileWriter(fileName,true); //the true will append the new data
-            gson.toJson(parser.parse(getJSONString(raidTracker, gson, parser)), fw);
-            fw.append("\n");
-
-            fw.close();
-        }
-        catch(IOException ioe)
-        {
-            System.err.println("IOException: " + ioe.getMessage() + " in writeToFile");
-        }
+            saved.add(raidTracker);
+        };
+        updateRTList(saved, raidTracker.getInRaidType());
     }
 
     public String getJSONString(RaidTracker raidTracker, Gson gson, JsonParser parser)
     {
         return gson.toJson(raidTracker);
     };
-    /*public String getJSONString(RaidTracker raidTracker, Gson gson, JsonParser parser)
-    {
-        System.out.println("gson.toJson(raidTracker)");
-        System.out.println(gson.toJson(raidTracker));
-        JsonObject RTJson =  parser.parse(gson.toJson(raidTracker)).getAsJsonObject();
-        List<RaidTrackerItem> lootList = raidTracker.getLootList();
-        JsonArray lootListToString = new JsonArray();
-
-        for (RaidTrackerItem item : lootList) {
-            lootListToString.add(parser.parse(gson.toJson(item, new TypeToken<RaidTrackerItem>() {
-            }.getType())));
-        }
-
-        RTJson.addProperty("lootList", lootListToString.toString());
-        return RTJson.toString().replace("\\\"", "\"").replace("\"[", "[").replace("]\"", "]");
-    }*/
 
     public ArrayList<RaidTracker> readFromFile(String alternateFile, int raidType)
     {
@@ -128,7 +92,6 @@ public class FileReadWriter {
                 catch (JsonSyntaxException e) {
                     System.out.println("Bad line: " + line);
                 }
-
             }
 
             bufferedreader.close();
@@ -147,7 +110,7 @@ public class FileReadWriter {
     public void createFolders()
     {
         System.out.println("creating folders with name "+ username);
-        File dir = new File(RUNELITE_DIR, "raid-data tracker");
+        File dir = new File(RUNELITE_DIR, "raid-data-tracker");
         IGNORE_RESULT(dir.mkdir());
         dir = new File(dir, username);
         IGNORE_RESULT(dir.mkdir());
@@ -181,7 +144,10 @@ public class FileReadWriter {
 
     public void updateRTList(ArrayList<RaidTracker> RTList, int type) {
         String dir;
-
+        if (coxDir == null)
+        {
+            createFolders();
+        };
         switch (type)
         {
             case 0 : // chambers;
@@ -205,21 +171,10 @@ public class FileReadWriter {
 
 
             FileWriter fw = new FileWriter(fileName, false); //the true will append the new data
-
             for (RaidTracker RT : RTList) {
-                if (RT.getLootSplitPaid() > 0) {
-                    RT.setSpecialLootInOwnName(true);
-                }
-                else {
-                    //bit of a wonky check, so try to avoid with lootsplitpaid if possible
-                    RT.setSpecialLootInOwnName(RT.getLootList().size() > 0 && RT.getLootList().get(0).getName().equalsIgnoreCase(RT.getSpecialLoot()));
-                }
-
                 gson.toJson(parser.parse(getJSONString(RT, gson, parser)), fw);
-
                 fw.append("\n");
             }
-
             fw.close();
 
         } catch (IOException e) {
@@ -230,7 +185,10 @@ public class FileReadWriter {
 
     public boolean delete(int type) {
         String dir;
-
+        if (coxDir == null)
+        {
+            createFolders();
+        };
         switch (type)
         {
             case 0 : // chambers;
